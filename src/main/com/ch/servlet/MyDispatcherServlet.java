@@ -23,26 +23,26 @@ import java.util.*;
  */
 public class MyDispatcherServlet extends HttpServlet {
 
+	// 为了得到参数的名称 引入了Spring的类
 	private static LocalVariableTableParameterNameDiscoverer parameterNameDiscoverer = new LocalVariableTableParameterNameDiscoverer();
 
 	// 配置文件
 	private Properties properties = new Properties();
 
-	// 类名
+	// 扫描指定包下的所有类
 	private List<String> classNames = new ArrayList<>();
 
 	//模拟ioc容器
 	private Map<String, Object> ioc = new HashMap<>();
 
-	// 方法映射
+	// 请求的URL对应的方法
 	private Map<String, Method> handlerMapping = new  HashMap<>();
 
-	// 控制层
+	// 请求的url对应的控制层实例
 	private Map<String, Object> controllerMap  =new HashMap<>();
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		// 交给post处理
 		this.doPost(req, resp);
 	}
 
@@ -96,7 +96,7 @@ public class MyDispatcherServlet extends HttpServlet {
 				if (parameterType == int.class) {
 					methodParamValues[i] = (int)Integer.parseInt(reqParameterMap.get(methodParameterNames[i])[0]);
 				}else if(parameterType == Integer.class){
-					methodParamValues[i] = (int)Integer.parseInt(reqParameterMap.get(methodParameterNames[i])[0]);
+					methodParamValues[i] = Integer.parseInt(reqParameterMap.get(methodParameterNames[i])[0]);
 				} else if (parameterType == Float.class) {
 					methodParamValues[i] = Float.valueOf(reqParameterMap.get(methodParameterNames[i])[0]);
 				}else if (parameterType == Double.class) {
@@ -105,7 +105,15 @@ public class MyDispatcherServlet extends HttpServlet {
 					methodParamValues[i] = reqParameterMap.get(methodParameterNames[i])[0];
 				}
 			}else{
-				methodParamValues[i]=null;
+				try {
+					methodParamValues[i]=parameterType.newInstance();
+				} catch (IllegalAccessException e) {
+					e.printStackTrace();
+					methodParamValues[i] = 0;
+				} catch (InstantiationException e) {
+					e.printStackTrace();
+					methodParamValues[i] = 0;
+				}
 			}
 		}
 		Object o = controllerMap.get(url);

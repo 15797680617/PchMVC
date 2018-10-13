@@ -4,6 +4,8 @@ import com.ch.annotation.Controller;
 import com.ch.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 /**
  * @Auther: pch
@@ -15,8 +17,13 @@ import javax.servlet.http.HttpServletRequest;
 public class HelloController {
 
 	@RequestMapping("/java")
-	public void java(String javaName,String name,int java, HttpServletRequest request){
+	public void java(String javaName, String name, int java, HttpServletRequest request, HttpServletResponse response){
 		System.err.println("==============hello Java==============");
+		System.out.println(javaName);
+		System.out.println(name);
+		System.out.println(java);
+		System.out.println(request);
+		System.out.println(response);
 	}
 
 	@RequestMapping("/android")

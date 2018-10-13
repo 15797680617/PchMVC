@@ -3,7 +3,7 @@ package com.ch.annotation;
 import java.lang.annotation.*;
 
 /**
- * @Auther: pch 参数
+ * @Auther: pch 参数（暂时没写）
  * @Date: 2018/10/12 21:42
  * @Description:
  */
