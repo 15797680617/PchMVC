@@ -70,17 +70,17 @@ public class MyDispatcherServlet extends HttpServlet {
 			}
 		}
 		Method method = handlerMapping.get(url);
+		// 获取方法的 形参名 借助了Spring的类
 		String[] methodParameterNames = parameterNameDiscoverer.getParameterNames(method);
-		// 获取方法的参数列表
+		// 获取方法的参数类型列表
 		Class<?>[] methodParameterTypes = method.getParameterTypes();
-		Parameter[] parameters = method.getParameters();
 		// 获取请求的参数
 		Map<String, String[]> reqParameterMap = req.getParameterMap();
 		// 保存参数值
 		Object [] methodParamValues= new Object[methodParameterTypes.length];
 		//方法的参数列表
 		Class parameterType;
-		for (int i = 0; i<parameters.length; i++){
+		for (int i = 0; i<methodParameterTypes.length; i++){
 			//得到 方法参数类型
 			parameterType = methodParameterTypes[i];
 			// requese和response
@@ -124,7 +124,6 @@ public class MyDispatcherServlet extends HttpServlet {
 		} catch (InvocationTargetException e) {
 			e.printStackTrace();
 		}
-
 	}
 
 	@Override
@@ -154,7 +153,7 @@ public class MyDispatcherServlet extends HttpServlet {
 	private void doLoadConfig(String location){
 		//把web.xml中的contextConfigLocation对应value值的文件加载到流里面
 		InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(location);
-		//用Properties文件加载文件里的内容
+		//读取配置文件
 		try {
 			properties.load(inputStream);
 		} catch (IOException e) {
@@ -173,8 +172,6 @@ public class MyDispatcherServlet extends HttpServlet {
 		//把所有的.替换成/
 		Class c = this.getClass();
 		ClassLoader classLoader = c.getClassLoader();
-		URL resource = classLoader.getResource("/");
-		URL resource1 = classLoader.getResource("/" + packageName.replaceAll("\\.", "/"));
 		URL url = this.getClass().getClassLoader().getResource("/" + packageName.replaceAll("\\.", "/"));
 		File dir = new File(url.getFile());
 		for (File file : dir.listFiles()) {
@@ -243,7 +240,6 @@ public class MyDispatcherServlet extends HttpServlet {
 				}
 				requestMapping = method.getAnnotation(RequestMapping.class);
 				String url = requestMapping.value();
-				//url = (baseUrl + url).replaceAll("/+", "/");
 				url = baseUrl + url;
 				// 将请求url 和 对应的方法 放到map中
 				handlerMapping.put(url,method);
